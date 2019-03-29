@@ -20,9 +20,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "openfoodnetwork/", "/home/vagrant/openfoodnetwork", id: "openfoodnetwork", create: true
 
   config.vm.provider :virtualbox do |vbox|
-    # Disable virtualbox logging to file
-    vbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
-
     # Set box memory.
     vbox.customize ['modifyvm', :id, '--memory', '1792']
 

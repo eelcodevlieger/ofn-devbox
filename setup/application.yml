@@ -1,0 +1,24 @@
+# Add application configuration variables here, as shown below.
+#
+# Change this, it has serious security implications.
+# Minimum 30 but usually 128 characters. To obtain run 'rake secret', or faster, 'openssl rand -hex 128'
+SECRET_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+TIMEZONE: London
+# Default country for dropdowns etc. See for codes: http://en.wikipedia.org/wiki/ISO_3166-1
+DEFAULT_COUNTRY_CODE: GB
+# Locale for translation.
+LOCALE: en
+
+AVAILABLE_LOCALES: en
+# Spree zone.
+CHECKOUT_ZONE: UK
+# Find currency codes at http://en.wikipedia.org/wiki/ISO_4217.
+CURRENCY: GBP
+
+# Mail settings
+MAIL_HOST: 'example.com'
+MAIL_DOMAIN: 'example.com'
+MAIL_PORT: 25
+SMTP_USERNAME: 'ofn'
+SMTP_PASSWORD: 'f00d'

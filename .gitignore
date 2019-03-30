@@ -2,3 +2,4 @@
 openfoodnetwork/
 *.log
 .idea/
+*.retry

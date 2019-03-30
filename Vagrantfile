@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = '2'
-HOST_PORT = 3001
+HOST_PORT = 3000
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :virtualbox do |vbox|
     # Set box memory.
-    vbox.customize ['modifyvm', :id, '--memory', '1792']
+    vbox.customize ['modifyvm', :id, '--memory', '2048']
 
     # Optimise virtualbox.
     vbox.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
@@ -29,11 +29,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Set up and install OFN (one time only)
-  config.vm.provision 'setup', type: 'shell', path: 'setup/provision.sh', privileged: false
+  config.vm.provision 'setup', type: 'ansible_local' do |ansible|
+    ansible.playbook = '/vagrant/setup/provision.yml'
+    ansible.verbose = "true"
+    ansible.galaxy_role_file = '/vagrant/setup/requirements.yml'
+    ansible.galaxy_roles_path = '/etc/ansible/roles'
+    ansible.galaxy_command = 'sudo ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}'
+  end
 
   # Launch daemonized Rails server (whenever the box is started)
   config.vm.provision 'launch', type: 'shell', privileged: false, run: 'always', inline: <<-SHELL
-      # Shut down any stale Rails instances on port 3000
+      # Shut down any stale Rails instances on (guest) port 3000
       if [[ -n $(lsof -i tcp:3000 -t) ]];then
         echo '### Shutting down current Rails server instance...'
         kill -9 $(lsof -i tcp:3000 -t)
@@ -49,5 +55,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       echo '### Rails server is now available at host address: http://localhost:#{HOST_PORT}...'
   SHELL
-
 end

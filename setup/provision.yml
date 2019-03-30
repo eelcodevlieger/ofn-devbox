@@ -1,0 +1,134 @@
+---
+- name: provision
+  hosts: all
+  remote_user: vagrant
+
+  pre_tasks:
+    - name: install packages
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+        cache_valid_time: 86400
+      become: yes
+      vars:
+        packages:
+          - git-core
+          - curl
+          - zlib1g-dev
+          - build-essential
+          - libssl-dev
+          - libreadline-dev
+          - libyaml-dev
+          - libsqlite3-dev
+          - sqlite3
+          - libxml2-dev
+          - libxslt1-dev
+          - libcurl4-openssl-dev
+          - python-software-properties
+          - libffi-dev
+          - git
+          - postgresql-9.5
+          - postgresql-common
+          - libpq-dev
+          - phantomjs
+          - nodejs
+          - npm
+          - python-psycopg2
+
+  roles:
+    - role: zzet.rbenv
+      rbenv:
+        env: user
+        version: v1.0.0
+        default_ruby: 2.1.5
+        rubies:
+          - version: 2.1.5
+      rbenv_users:
+        - vagrant
+
+  tasks:
+    - name: fetch nodenv
+      git:
+        repo: https://github.com/nodenv/nodenv.git
+        dest: /home/vagrant/.nodenv
+        depth: 1
+        version: v1.2.0
+
+    - name: fetch node-build
+      git:
+        repo: https://github.com/nodenv/node-build.git
+        dest: /home/vagrant/.nodenv/plugins/node-build
+        depth: 1
+        version: v4.4.5
+
+    - name: add nodenv initialization to profile
+      copy:
+        src: /vagrant/setup/nodenv.sh
+        dest: /etc/profile.d/nodenv.sh
+        owner: root
+        group: root
+        mode: 0755
+      become: yes
+
+    - name: install node 5.12.0
+      shell: bash -lc "nodenv install 5.12.0"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+        creates: /home/vagrant/.nodenv/versions/5.12.0
+
+    - name: fetch ofn repo
+      git:
+        repo: https://github.com/openfoodfoundation/openfoodnetwork.git
+        dest: /home/vagrant/openfoodnetwork
+        version: master
+
+    - name: copy application.yml
+      copy:
+        src: /vagrant/setup/application.yml
+        dest: /home/vagrant/openfoodnetwork/config/application.yml
+
+    - name: create database user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        name: ofn
+        password: f00d
+        expires: infinity
+        role_attr_flags: SUPERUSER,CREATEDB
+
+    - name: install bundler
+      shell: bash -lc "./script/install-bundler"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+
+    - name: install gems (this may take a while...)
+      shell: bash -lc "bundle install"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+
+    - name: install node packages
+      shell: bash -lc "npm install"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+
+    - name: prepare databases
+      shell: bash -lc "bundle exec rake db:setup db:test:prepare"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+      environment:
+        AUTO_ACCEPT: true
+
+    - name: load sample data
+      shell: bash -lc "bundle exec rake ofn:sample_data"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+
+    - name: disable skylight warnings
+      shell: skylight disable_dev_warning
+      args:
+        chdir: /home/vagrant/openfoodnetwork/
+
+    - name: app configuration
+      command: bash -lc "rails runner /vagrant/setup/config.rb"
+      args:
+        chdir: /home/vagrant/openfoodnetwork/

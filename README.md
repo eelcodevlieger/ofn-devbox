@@ -8,7 +8,7 @@ This repo is designed to help Windows or Mac users get a dev environment up and 
 - Profit!
 
 The setup should create a new local directory `/openfoodnetwork`, which will contain the app files. This will be synced to a directory in the guest box.
-The vagrant box will start up a Rails server and make it available at `localhost:3001` on the host machine. 
+The vagrant box will start up a Rails server and make it available at `localhost:3000` on the host machine. 
 
 Once it's set up you can change into the `/openfoodnetwork` directory and set it up for working with github:
 

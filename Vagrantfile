@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Start Rails server (daemonized)
       echo '### Starting Rails server...'
       cd ~/openfoodnetwork
-      rails server -d 2>/dev/null 
+      rails server webrick -d 2>/dev/null 
 
       echo '### Rails server is now available at host address: http://localhost:#{HOST_PORT}...'
   SHELL

@@ -48,6 +48,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Load shims
       export PATH="$HOME/.rbenv/bin:~/.rbenv/shims:$PATH"
 
+      # Disable Skylight
+      export SKYLIGHT_DISABLE_AGENT=true
+
       # Start Rails server (daemonized)
       echo '### Starting Rails server...'
       cd ~/openfoodnetwork

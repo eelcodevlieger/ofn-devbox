@@ -1,6 +1,6 @@
 This repo is designed to help Windows or Mac users get a dev environment up and running quickly using Vagrant.
 
-#### Basic Usage:
+#### Setup:
 
 - Install Virtualbox, Vagrant, and Git.
 - Start the box with the command: `vagrant up` (inside this directory).
@@ -20,3 +20,19 @@ git remote add upstream https://github.com/openfoodfoundation/openfoodnetwork.gi
 git remote add origin https://github.com/YOUR-USERNAME/openfoodnetwork.git
 
 ```
+
+#### Vagrant general usage
+
+The following commands are useful for managing your virtual server with Vagrant:
+```sh
+# Shut down the VM:
+vagrant halt
+
+# Restart the VM:
+vagrant reload
+
+# Delete the VM:
+vagrant destroy
+```
+
+You can also connect to the VM via SSH using the command: `vagrant ssh`. 

@@ -123,11 +123,6 @@
       args:
         chdir: /home/vagrant/openfoodnetwork/
 
-    - name: disable skylight warnings
-      shell: skylight disable_dev_warning
-      args:
-        chdir: /home/vagrant/openfoodnetwork/
-
     - name: app configuration
       command: bash -lc "rails runner /vagrant/setup/config.rb"
       args:

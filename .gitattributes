@@ -1,0 +1,6 @@
+# Set line endings to LF, even on Windows / OSX.
+# See https://help.github.com/articles/dealing-with-line-endings/
+
+*.sh text eol=lf
+*.rb text eol=lf
+*.yml text eol=lf

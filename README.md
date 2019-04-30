@@ -3,6 +3,7 @@ This repo is designed to help Windows or Mac users get a dev environment up and 
 #### Setup:
 
 - Install Virtualbox, Vagrant, and Git.
+- Vagrant commands need to be run from an Administrator terminal on Windows.
 - Start the box with the command: `vagrant up` (inside this directory).
 - Wait for the installation to finish...
 - Profit!
@@ -33,6 +34,9 @@ vagrant reload
 
 # Delete the VM:
 vagrant destroy
+
+# Retry the provisioning (setup) stage:
+vagrant up --provision
 ```
 
 You can also connect to the VM via SSH using the command: `vagrant ssh`. 

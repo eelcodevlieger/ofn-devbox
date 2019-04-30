@@ -107,7 +107,7 @@
         chdir: /home/vagrant/openfoodnetwork/
 
     - name: install node packages
-      shell: bash -lc "npm install"
+      shell: bash -lc "npm install --no-bin-links"
       args:
         chdir: /home/vagrant/openfoodnetwork/
 
